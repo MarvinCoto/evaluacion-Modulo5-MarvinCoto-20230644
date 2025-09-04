@@ -9,12 +9,12 @@ import {
 import { 
   doc, 
   setDoc, 
-  getDoc, 
+  onSnapshot, 
   updateDoc 
 } from 'firebase/firestore';
 import { database } from '../config/firebase';
 
-export const useAuth = () => {
+export const useUsers = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
@@ -22,20 +22,40 @@ export const useAuth = () => {
   const auth = getAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        await getUserProfile(user.uid);
-      } else {
-        setUser(null);
-        setUserProfile(null);
+  let unsubscribeFromUserProfile = null;
+
+  //Función para ctualizar los datos del usuario automáticamente si se actualizan
+  const unsubscribeFromAuth = onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setUser(user);
+
+      // Escucha en tiempo real los cambios en el perfil del usuario
+      const userRef = doc(database, 'users', user.uid);
+      unsubscribeFromUserProfile = onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setUserProfile(docSnap.data());
+        }
+      });
+    } else {
+      setUser(null);
+      setUserProfile(null);
+      if (unsubscribeFromUserProfile) {
+        unsubscribeFromUserProfile();
       }
-      setLoading(false);
-    });
+    }
+    setLoading(false);
+  });
 
-    return unsubscribe;
-  }, []);
+  // Cleanup
+  return () => {
+    unsubscribeFromAuth();
+    if (unsubscribeFromUserProfile) {
+      unsubscribeFromUserProfile();
+    }
+  };
+}, []);
 
+  //Función para registrar un nuevo usuario
   const register = async (userData) => {
     try {
       const { email, password, name, universityDegree, graduationYear } = userData;
@@ -58,6 +78,7 @@ export const useAuth = () => {
     }
   };
 
+  //Función para iniciar sesión
   const login = async (email, password) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -67,6 +88,7 @@ export const useAuth = () => {
     }
   };
 
+  //Función para cerrar sesión
   const logout = async () => {
     try {
       await signOut(auth);
@@ -76,6 +98,7 @@ export const useAuth = () => {
     }
   };
 
+  //Función para obtener la información del perfil del usuario
   const getUserProfile = async (userId) => {
     try {
       const docRef = doc(database, 'users', userId);
@@ -93,6 +116,7 @@ export const useAuth = () => {
     }
   };
 
+  //Función para actualizar la información del perfil del usuario
   const updateUserProfile = async (userData) => {
     try {
       if (!user) return { success: false, error: 'No user logged in' };

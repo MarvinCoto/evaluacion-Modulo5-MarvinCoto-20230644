@@ -11,7 +11,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useUsers } from '../hooks/useUsers';
 
 const RegisterScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -23,8 +23,9 @@ const RegisterScreen = ({ navigation }) => {
   });
   const [loading, setLoading] = useState(false);
   
-  const { register } = useAuth();
+  const { register } = useUsers();
 
+  //Manejar el estado de los valores de los inputs
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -32,6 +33,7 @@ const RegisterScreen = ({ navigation }) => {
     }));
   };
 
+  //Función handle para registrar un usuario
   const handleRegister = async () => {
     const { name, email, password, universityDegree, graduationYear } = formData;
     

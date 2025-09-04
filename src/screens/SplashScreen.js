@@ -2,22 +2,24 @@ import React from 'react';
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
 
 const SplashScreen = () => {
+  
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        {/* Puedes cambiar esta imagen por la que necesites */}
         <View style={styles.imageContainer}>
-          <View style={styles.placeholderImage}>
-            <Text style={styles.placeholderText}>LOGO</Text>
-          </View>
+          <Image 
+            source={require('../../assets/ues.png')}
+            style={styles.logo}
+          />
         </View>
         
-        <Text style={styles.title}>Mi Aplicación</Text>
+        <Text style={styles.title}>Gestión de perfil universitario</Text>
         <Text style={styles.subtitle}>Cargando...</Text>
         
         <ActivityIndicator 
@@ -43,18 +45,10 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginBottom: 30,
   },
-  placeholderImage: {
-    width: 120,
-    height: 120,
-    backgroundColor: '#B91C1C',
-    borderRadius: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeholderText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: 'bold',
+  logo: {
+    width: 160,              
+    height: 160,             
+    resizeMode: 'contain',  
   },
   title: {
     fontSize: 28,

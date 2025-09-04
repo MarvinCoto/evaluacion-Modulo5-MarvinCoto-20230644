@@ -5,22 +5,25 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
   Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useUsers } from '../hooks/useUsers';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useAuth();
+  const { login } = useUsers();
 
+  //Función handle para iniciar sesión
   const handleLogin = async () => {
+    //Validación de correo y contraseña
     if (!email.trim() || !password.trim()) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
@@ -42,6 +45,12 @@ const LoginScreen = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
+          <View style={styles.imageContainer}>
+            <Image 
+              source={require('../../assets/ues.png')}
+              style={styles.logo}
+            />
+          </View>
           <Text style={styles.title}>Bienvenido</Text>
           <Text style={styles.subtitle}>Inicia sesión en tu cuenta</Text>
 
@@ -168,6 +177,15 @@ const styles = StyleSheet.create({
     color: '#B91C1C',
     fontSize: 16,
     fontWeight: '600',
+  },
+  imageContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
+  },
+  logo: {
+    width: 140,              
+    height: 140,             
+    resizeMode: 'contain',  
   },
 });
 

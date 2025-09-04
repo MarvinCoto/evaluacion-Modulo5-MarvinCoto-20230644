@@ -8,15 +8,15 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useUsers } from '../hooks/useUsers';
 import EditProfileModal from '../components/EditProfileModal';
-console.log(EditProfileModal)
 
 const HomeScreen = () => {
-  const { user, userProfile, logout } = useAuth();
+  const { user, userProfile, logout } = useUsers();
   const [showEditModal, setShowEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  //Confirmación para cerrar sesión
   const handleLogout = async () => {
     Alert.alert(
       'Cerrar Sesión',

@@ -12,7 +12,7 @@ import {
   Platform,
   ActivityIndicator
 } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useUsers } from '../hooks/useUsers';
 
 const EditProfileModal = ({ visible, onClose, currentProfile }) => {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
   });
   const [loading, setLoading] = useState(false);
   
-  const { updateUserProfile } = useAuth();
+  const { updateUserProfile } = useUsers();
 
   useEffect(() => {
     if (currentProfile && visible) {
@@ -34,7 +34,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
     }
   }, [currentProfile, visible]);
 
-  // ← AGREGAMOS LA FUNCIÓN handleInputChange
+  // Función handleInputChange para manejar el estado de los valores de los campos
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -42,7 +42,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
     }));
   };
 
-  // ← AGREGAMOS LA FUNCIÓN handleSave (la más sospechosa)
+  //Función handle para guardar los cambios
   const handleSave = async () => {
     const { name, universityDegree, graduationYear } = formData;
     
@@ -78,7 +78,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
     }
   };
 
-  // ← AGREGAMOS LA FUNCIÓN handleCancel
+  //Cerrar el modal
   const handleCancel = () => {
     if (currentProfile) {
       setFormData({
@@ -95,7 +95,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
       visible={visible}
       animationType="slide"
       presentationStyle="pageSheet"
-      onRequestClose={handleCancel} // ← CAMBIO: usamos handleCancel
+      onRequestClose={handleCancel}
     >
       <KeyboardAvoidingView 
         style={styles.container}
@@ -104,7 +104,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
         <View style={styles.header}>
           <TouchableOpacity 
             style={styles.cancelButton}
-            onPress={handleCancel} // ← CAMBIO: usamos handleCancel
+            onPress={handleCancel}
             disabled={loading}
           >
             <Text style={styles.cancelButtonText}>Cancelar</Text>
@@ -114,7 +114,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
           
           <TouchableOpacity
             style={[styles.saveButton, loading && styles.buttonDisabled]}
-            onPress={handleSave} // ← CAMBIO: usamos handleSave
+            onPress={handleSave}
             disabled={loading}
           >
             {loading ? (
@@ -133,7 +133,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
                 style={styles.input}
                 placeholder="Ingresa tu nombre completo"
                 value={formData.name}
-                onChangeText={(value) => handleInputChange('name', value)} // ← CAMBIO
+                onChangeText={(value) => handleInputChange('name', value)}
                 editable={!loading}
               />
             </View>
@@ -144,7 +144,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
                 style={styles.input}
                 placeholder="Ej: Ingeniería en Sistemas"
                 value={formData.universityDegree}
-                onChangeText={(value) => handleInputChange('universityDegree', value)} // ← CAMBIO
+                onChangeText={(value) => handleInputChange('universityDegree', value)}
                 editable={!loading}
               />
             </View>
@@ -155,7 +155,7 @@ const EditProfileModal = ({ visible, onClose, currentProfile }) => {
                 style={styles.input}
                 placeholder="Ej: 2024"
                 value={formData.graduationYear}
-                onChangeText={(value) => handleInputChange('graduationYear', value)} // ← CAMBIO
+                onChangeText={(value) => handleInputChange('graduationYear', value)}
                 keyboardType="numeric"
                 editable={!loading}
               />
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     minWidth: 80,
     alignItems: 'center',
   },
-  buttonDisabled: { // ← AGREGAMOS
+  buttonDisabled: {
     opacity: 0.7,
   },
   saveButtonText: {
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  scrollContent: { // ← AGREGAMOS
+  scrollContent: {
     padding: 20,
   },
   form: {

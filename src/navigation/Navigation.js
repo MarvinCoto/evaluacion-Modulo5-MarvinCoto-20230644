@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from '../hooks/useAuth';
+import { useUsers } from '../hooks/useUsers';
+import { useState, useEffect } from 'react';
 
 // Pantallas
 import SplashScreen from '../screens/SplashScreen';
@@ -12,9 +13,21 @@ import HomeScreen from '../screens/HomeScreen';
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const { user, loading } = useAuth();
+  const { user, loading } = useUsers();
+  const [showSplash, setShowSplash] = useState(true);
 
-  if (loading) {
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => {
+        setShowSplash(false);
+      }, 3000); // Esperar 3 segundos después de que loading termine
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
+
+  //Mostrar la SplashScreen
+  if (loading || showSplash) {
     return <SplashScreen />;
   }
 
